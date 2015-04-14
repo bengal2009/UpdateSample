@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 
-import android.util.Log;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -39,7 +37,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+//        new NetworkTool.AsyncHttpTask(this).execute("http://60.248.68.66/update/ver.json");
         if (getServerVerCode()) {
             int vercode = Config.getVerCode(this);
             if (newVerCode > vercode) {
@@ -68,7 +66,7 @@ public class MainActivity extends Activity {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+//            Log.e(TAG, e.getMessage());
             return false;
         }
         return true;
