@@ -115,7 +115,6 @@ public class MainActivity extends Activity {
         Dialog dialog = new AlertDialog.Builder(this)
                 .setTitle("软件更新")
                 .setMessage(sb.toString())
-                        // 璁剧疆鍐呭
                 .setPositiveButton("更新",// 设置确定按钮
                         new DialogInterface.OnClickListener() {
 
