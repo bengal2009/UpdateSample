@@ -78,14 +78,14 @@ public class MainActivity extends Activity {
         int verCode = Config.getVerCode(this);
         String verName = Config.getVerName(this);
         StringBuffer sb = new StringBuffer();
-        sb.append("褰撳墠鐗堟湰:");
+        sb.append("当前版本:");
         sb.append(verName);
         sb.append(" Code:");
         sb.append(verCode);
-        sb.append(",\n宸叉槸鏈€鏂扮増,鏃犻渶鏇存柊!");
+        sb.append(",\n已是最新版,无需更新!");
         Dialog dialog = new AlertDialog.Builder(this)
-                .setTitle("杞欢鏇存柊").setMessage(sb.toString())// 璁剧疆鍐呭
-                .setPositiveButton("纭畾",// 璁剧疆纭畾鎸夐挳
+                .setTitle("软件更新").setMessage(sb.toString())// 设置内容
+                .setPositiveButton("确定",// 设置确定按钮
                         new DialogInterface.OnClickListener() {
 
                             @Override
@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
                             }
 
                         }).create();// 鍒涘缓
-        // 鏄剧ず瀵硅瘽妗�
+        // 显示对话框
         dialog.show();
     }
 
@@ -103,35 +103,35 @@ public class MainActivity extends Activity {
         int verCode = Config.getVerCode(this);
         String verName = Config.getVerName(this);
         StringBuffer sb = new StringBuffer();
-        sb.append("褰撳墠鐗堟湰:");
+        sb.append("当前版本:");
         sb.append(verName);
         sb.append(" Code:");
         sb.append(verCode);
-        sb.append(", 鍙戠幇鏂扮増鏈�:");
+        sb.append(", 发现新版本:");
         sb.append(newVerName);
         sb.append(" Code:");
         sb.append(newVerCode);
-        sb.append(", 鏄惁鏇存柊?");
+        sb.append(", 发现新版本:");
         Dialog dialog = new AlertDialog.Builder(this)
-                .setTitle("杞欢鏇存柊")
+                .setTitle("软件更新")
                 .setMessage(sb.toString())
                         // 璁剧疆鍐呭
-                .setPositiveButton("鏇存柊",// 璁剧疆纭畾鎸夐挳
+                .setPositiveButton("更新",// 设置确定按钮
                         new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                                 pBar = new ProgressDialog(MainActivity.this);
-                                pBar.setTitle("姝ｅ湪涓嬭浇");
-                                pBar.setMessage("璇风◢鍊�...");
+                                pBar.setTitle("正在下载");
+                                pBar.setMessage("请稍候...");
                                 pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                                 downFile(Config.UPDATE_SERVER
                                         + Config.UPDATE_APKNAME);
                             }
 
                         })
-                .setNegativeButton("鏆備笉鏇存柊",
+                .setNegativeButton("暂不更新",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int whichButton) {
