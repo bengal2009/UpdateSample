@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,7 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ReadJsonAsync.OnRetriveJsonListener {
     private static final String TAG = "Update";
     public ProgressDialog pBar;
     private Handler handler = new Handler();
@@ -37,8 +38,27 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ReadJsonAsync task=new ReadJsonAsync();
+        task.setOnRetriveScuessListener(this);
+        task.ReadJson(Config.UPDATE_SERVER
+                + Config.UPDATE_VERJSON);
+
 //        new NetworkTool.AsyncHttpTask(this).execute("http://60.248.68.66/update/ver.json");
-        if (getServerVerCode()) {
+       /* if (getServerVerCode()) {
+            int vercode = Config.getVerCode(this);
+            if (newVerCode > vercode) {
+                doNewVersionUpdate();
+            } else {
+                notNewVersionShow();
+            }
+        }*/
+
+    }
+    @Override
+    public void ReceiveScuess(String msg)
+    {
+        Log.i("ReceiveScuess","MSG:"+msg );
+         if (getServerVerCode(msg)) {
             int vercode = Config.getVerCode(this);
             if (newVerCode > vercode) {
                 doNewVersionUpdate();
@@ -46,19 +66,18 @@ public class MainActivity extends Activity {
                 notNewVersionShow();
             }
         }
-
     }
-
-    private boolean getServerVerCode() {
+    private boolean getServerVerCode(String verjson) {
         try {
-            String verjson = NetworkTool.getContent(Config.UPDATE_SERVER
-                    + Config.UPDATE_VERJSON);
+          /*String verjson = NetworkTool.getContent(Config.UPDATE_SERVER
+                    + Config.UPDATE_VERJSON);*/
             JSONArray array = new JSONArray(verjson);
             if (array.length() > 0) {
                 JSONObject obj = array.getJSONObject(0);
                 try {
                     newVerCode = Integer.parseInt(obj.getString("verCode"));
                     newVerName = obj.getString("verName");
+                    Log.i("newCode",Integer.toString(newVerCode) );
                 } catch (Exception e) {
                     newVerCode = -1;
                     newVerName = "";
@@ -141,6 +160,7 @@ public class MainActivity extends Activity {
     }
 
     void downFile(final String url) {
+        Log.i("Downfile","url:"+url );
         pBar.show();
         new Thread() {
             public void run() {
@@ -149,6 +169,7 @@ public class MainActivity extends Activity {
                 HttpResponse response;
                 try {
                     response = client.execute(get);
+
                     HttpEntity entity = response.getEntity();
                     long length = entity.getContentLength();
                     InputStream is = entity.getContent();

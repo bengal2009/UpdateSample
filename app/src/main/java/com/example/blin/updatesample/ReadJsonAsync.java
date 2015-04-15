@@ -1,17 +1,10 @@
 package com.example.blin.updatesample;
 
-/**
- * Created by blin on 2015/4/14.
- */
-
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -20,36 +13,57 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+/**
+ * Created by blin on 2015/4/15.
+ */
+public class ReadJsonAsync {
+    static private OnRetriveJsonListener mListener;
+    private AsyncHttpTask  mTask;
+    private Handler mHandler;
+    static private String RDSTR;
+    public interface OnRetriveJsonListener {
+        void ReceiveScuess(String msg);
+    }
 
-public class NetworkTool {
+    public void setOnRetriveScuessListener(OnRetriveJsonListener listener) {
+        this.mListener = listener;
+    }
 
-    private static String TAGSTR="NetworkTool";
+    // ?°e
+    public void ReadJson(String URLSTR) {
+        //TODO »Ý§P?¦³?¦³ÊI?
+        mTask = new AsyncHttpTask(URLSTR);
+        mTask.execute();
+    }
 
-
-
-
-
+    // °±¤î
+    public void stop() {
+        if (mTask != null)
+            mTask.cancel(true);
+    }
     public static class AsyncHttpTask extends AsyncTask<String, Void, Integer> {
         private static final String TAGSTR = "Http Connection";
 
         private ArrayAdapter arrayAdapter = null;
         private Context mcontext;
-
-
-        public AsyncHttpTask(Context mcontext) {
-            this.mcontext = mcontext;
+        private String urlstr;
+        public AsyncHttpTask(String Urlpass){
+            this.urlstr=Urlpass;
         }
+        /*public AsyncHttpTask(Context mcontext) {
+            this.mcontext = mcontext;
+        }*/
         @Override
         protected Integer doInBackground(String... params) {
             InputStream inputStream = null;
 
-            HttpURLConnection urlConnection = null;
-            Log.i("TAGSTR","Backgroud");
+            HttpURLConnection urlConnection =  null;
+            Log.i("TAGSTR", "Backgroud");
             Integer result = 0;
             try {
                 /* forming th java.net.URL object */
-                URL url = new URL(params[0]);
-
+                URL url = new URL(this.urlstr);
+                Log.i(TAGSTR,"URL:"+url.toString() );
                 urlConnection = (HttpURLConnection) url.openConnection();
 
                  /* optional request header */
@@ -69,7 +83,8 @@ public class NetworkTool {
                     inputStream = new BufferedInputStream(urlConnection.getInputStream());
 
                     String response = convertInputStreamToString(inputStream);
-                    Log.i("TAGSTR",response);
+                    Log.i("TAGSTR", response);
+                    RDSTR=response;
                     result = 1; // Successful
 
                 }else{
@@ -89,7 +104,7 @@ public class NetworkTool {
             /* Download complete. Lets update UI */
             Log.i(TAGSTR,"onPostExecut");
             if(result == 1){
-
+                mListener.ReceiveScuess(RDSTR);
 //                arrayAdapter = new ArrayAdapter(mcontext, android.R.layout.simple_list_item_1, blogTitles);
 
 //                listView.setAdapter(arrayAdapter);
@@ -119,70 +134,5 @@ public class NetworkTool {
         }
 
         return result;
-    }
-    private static String[] parseResult(String result) {
-        String s1[]=null;
-        Log.i("TAGSTR", "Parse");
-        try{
-            JSONObject response = new JSONObject(result);
-
-            JSONArray posts = response.optJSONArray("posts");
-
-            s1= new String[posts.length()];
-
-            for(int i=0; i< posts.length();i++ ){
-                JSONObject post = posts.optJSONObject(i);
-                String title = post.optString("title");
-
-                s1[i] = title;
-            }
-
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return s1;
-    }
-    public static String getContent(String urlstr) throws Exception{
-        StringBuilder sb = new StringBuilder();
-        String response=null;
-        InputStream inputStream = null;
-
-        HttpURLConnection urlConnection = null;
-        Log.i(TAGSTR,"Backgroud");
-        Integer result = 0;
-        try {
-                /* forming th java.net.URL object */
-            URL url = new URL(urlstr);
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-                 /* optional request header */
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-
-                /* optional request header */
-            urlConnection.setRequestProperty("Accept", "application/json");
-
-                /* for Get request */
-            urlConnection.setRequestMethod("GET");
-
-            int statusCode = urlConnection.getResponseCode();
-            Log.i(TAGSTR,Integer.toString(statusCode) );
-                /* 200 represents HTTP OK */
-            if (statusCode ==  200) {
-
-                inputStream = new BufferedInputStream(urlConnection.getInputStream());
-
-                response = convertInputStreamToString(inputStream);
-
-
-            }else{
-                result = 0; //"Failed to fetch data!";
-            }
-
-        } catch (Exception e) {
-            Log.i(TAGSTR, e.getLocalizedMessage());
-        }
-
-        return response;
     }
 }
