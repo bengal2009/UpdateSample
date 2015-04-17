@@ -151,11 +151,9 @@ public class MainActivity extends Activity implements ReadJsonAsync.OnRetriveJso
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int whichButton) {
-                                // 鐐瑰嚮"鍙栨秷"鎸夐挳涔嬪悗閫€鍑虹▼搴�
                                 finish();
                             }
                         }).create();// 鍒涘缓
-        // 鏄剧ず瀵硅瘽妗�
         dialog.show();
     }
 
