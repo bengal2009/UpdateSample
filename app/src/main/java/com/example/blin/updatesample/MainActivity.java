@@ -224,6 +224,8 @@ public class MainActivity extends Activity implements ReadJsonAsync.OnRetriveJso
         intent.setDataAndType(Uri.fromFile(new File(Environment
                         .getExternalStorageDirectory(), Config.UPDATE_SAVENAME)),
                 "application/vnd.android.package-archive");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         startActivity(intent);
     }
 
