@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+//http://blog.csdn.net/xjanker2/article/details/6080575
+//http://blog.csdn.net/coolszy/article/details/6544598
 
 public class NetworkTool {
 
